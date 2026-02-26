@@ -48,6 +48,7 @@ use crate::vocabulary::{ContextKey, SensorVocabulary};
 /// });
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct MbotSensors {
     /// Ambient light level (CyberPi light sensor).
     pub brightness: BrightnessBand,
@@ -63,8 +64,9 @@ pub struct MbotSensors {
     pub time_period: TimePeriod,
 }
 
-/// Ambient light level — quantised from the CyberPi light sensor.
+/// Ambient light level — quantised from the CyperPi light sensor.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum BrightnessBand {
     /// Very low ambient light (night, dark room).
     Dark,
@@ -76,6 +78,7 @@ pub enum BrightnessBand {
 
 /// Ambient sound level — quantised from the CyberPi microphone.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum NoiseBand {
     /// Very low ambient noise (silent room).
     Quiet,
@@ -87,6 +90,7 @@ pub enum NoiseBand {
 
 /// Nearby presence signature — person or object detection.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum PresenceSignature {
     /// No person detected in sensor range.
     Absent,
@@ -98,6 +102,7 @@ pub enum PresenceSignature {
 
 /// Robot motion context — derived from wheel encoder state.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum MotionContext {
     /// Robot is stationary (encoders at rest).
     Static,
@@ -109,6 +114,7 @@ pub enum MotionContext {
 
 /// Robot orientation relative to its starting heading (IMU pitch/roll).
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Orientation {
     /// Robot is upright — tilt within acceptable range.
     Upright,
@@ -118,6 +124,7 @@ pub enum Orientation {
 
 /// Time of day period — set by the host application or RTC.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum TimePeriod {
     /// Daytime hours (context: active, well-lit environments typical).
     Day,

@@ -21,6 +21,7 @@
 
 /// Result of a Sinkhorn-Knopp projection.
 #[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ConvergenceResult {
     /// Whether the tolerance was met within `max_iterations`.
     pub converged: bool,
@@ -34,6 +35,7 @@ pub struct ConvergenceResult {
 ///
 /// Patent Claims 19–23.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct SinkhornKnopp {
     /// Convergence tolerance (default: 1e-6). Stop when max|row_sum - 1.0| < tolerance.
     pub tolerance: f32,

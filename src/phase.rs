@@ -33,6 +33,7 @@
 ///
 /// Patent Claim 3 (modulators).
 #[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Personality {
     /// Drive to explore new contexts. Scales the cold-start baseline and
     /// the rate of positive coherence accumulation.
@@ -95,6 +96,7 @@ impl Default for Personality {
 ///
 /// Patent Claim 14.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct PhaseSpace {
     /// Coherence threshold to *enter* the high-coherence quadrants (QuietlyBeloved, ProtectiveGuardian).
     pub coherence_high_enter: f32,
@@ -141,6 +143,7 @@ impl Default for PhaseSpace {
 ///
 /// Patent Claims 14–18.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum SocialPhase {
     /// Low coherence, low tension: minimal expression, cautious observation.
     ShyObserver,
@@ -237,6 +240,7 @@ pub fn permeability(effective_coherence: f32, _tension: f32, quadrant: SocialPha
 /// Determines how much reflection the robot performs based on the current
 /// permeability. Lower permeability means less narration overhead.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum NarrationDepth {
     /// permeability < 0.2: No reflection.
     None,

@@ -41,6 +41,7 @@ use crate::vocabulary::{ContextKey, SensorVocabulary};
 ///
 /// Patent Claims 2–5.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct CoherenceAccumulator {
     /// Accumulated coherence for this context [0.0, 1.0].
     pub value: f32,

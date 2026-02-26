@@ -54,3 +54,5 @@ pub mod phase;        // #49: SocialPhase + Personality
 pub mod sinkhorn;     // #50: SinkhornKnopp projector
 pub mod boundary;     // #51: MinCutBoundary / Stoer-Wagner
 pub mod mbot;         // mBot2 reference vocabulary (MbotSensors, 6-dim)
+#[cfg(feature = "serde")]
+pub mod seg;          // #53: CCF_SEG snapshot format

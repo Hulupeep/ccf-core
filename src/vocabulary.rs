@@ -82,6 +82,7 @@ pub trait SensorVocabulary<const N: usize>: Eq + Hash + Clone + core::fmt::Debug
 ///
 /// Patent Claims 1 and 8.
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ContextKey<V: SensorVocabulary<N>, const N: usize> {
     /// The sensor vocabulary snapshot for this context.
     pub vocabulary: V,
