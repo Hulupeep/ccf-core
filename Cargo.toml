@@ -1,0 +1,26 @@
+[package]
+name = "ccf-core"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.75"
+license = "BUSL-1.1"
+description = "Contextual Coherence Fields — earned relational trust for autonomous systems. Patent pending US 63/988,438."
+repository = "https://github.com/Hulupeep/ccf-core"
+homepage = "https://github.com/Hulupeep/ccf-core"
+keywords = ["robotics", "trust", "coherence", "embedded", "no-std"]
+categories = ["embedded", "no-std", "science::robotics"]
+
+[features]
+default = []
+std = []
+serde = ["dep:serde"]
+
+[dependencies]
+hashbrown = { version = "0.14", default-features = false }
+serde = { version = "1", default-features = false, features = ["derive"], optional = true }
+
+[dev-dependencies]
+# no dev deps for now — all tests use core types only
+
+[profile.release]
+opt-level = "z"   # size-optimised for embedded
