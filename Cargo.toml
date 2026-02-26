@@ -7,6 +7,9 @@ license = "BUSL-1.1"
 description = "Contextual Coherence Fields — earned relational trust for autonomous systems. Patent pending US 63/988,438."
 repository = "https://github.com/Hulupeep/ccf-core"
 homepage = "https://github.com/Hulupeep/ccf-core"
+documentation = "https://docs.rs/ccf-core"
+authors = ["Flout Labs <cbyrne@floutlabs.com>"]
+readme = "README.md"
 keywords = ["robotics", "trust", "coherence", "embedded", "no-std"]
 categories = ["embedded", "no-std", "science::robotics"]
 
