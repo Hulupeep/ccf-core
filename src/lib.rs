@@ -53,3 +53,4 @@ pub mod accumulator;  // #49: CoherenceAccumulator + CoherenceField
 pub mod phase;        // #49: SocialPhase + Personality
 pub mod sinkhorn;     // #50: SinkhornKnopp projector
 pub mod boundary;     // #51: MinCutBoundary / Stoer-Wagner
+pub mod mbot;         // mBot2 reference vocabulary (MbotSensors, 6-dim)

@@ -450,7 +450,7 @@ fn exp_approx(x: f32) -> f32 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::vocabulary::{
+    use crate::mbot::{
         BrightnessBand, MbotSensors, MotionContext, NoiseBand, Orientation, PresenceSignature,
         TimePeriod,
     };

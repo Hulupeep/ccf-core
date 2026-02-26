@@ -135,156 +135,27 @@ impl<V: SensorVocabulary<N>, const N: usize> ContextKey<V, N> {
     }
 }
 
-/// mBot2 reference vocabulary — 6-dimensional sensor context.
-///
-/// Brightness, noise level, presence signature, motion context,
-/// orientation, and time period.
-///
-/// This is the concrete vocabulary used by the mBot2 demo robot.
-/// Any platform with a `SensorVocabulary` implementation can use
-/// the same `ContextKey<V, N>` and the full CCF stack.
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
-pub struct MbotSensors {
-    /// Ambient light level.
-    pub brightness: BrightnessBand,
-    /// Ambient sound level.
-    pub noise: NoiseBand,
-    /// Nearby presence signature.
-    pub presence: PresenceSignature,
-    /// Robot motion context.
-    pub motion: MotionContext,
-    /// Robot orientation relative to starting heading.
-    pub orientation: Orientation,
-    /// Time of day period.
-    pub time_period: TimePeriod,
-}
-
-/// Ambient light level.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub enum BrightnessBand {
-    /// Very low ambient light.
-    Dark,
-    /// Moderate ambient light.
-    Dim,
-    /// High ambient light.
-    Bright,
-}
-
-/// Ambient sound level.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub enum NoiseBand {
-    /// Very low ambient noise.
-    Quiet,
-    /// Moderate ambient noise.
-    Moderate,
-    /// High ambient noise.
-    Loud,
-}
-
-/// Nearby presence signature (person detection).
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub enum PresenceSignature {
-    /// No person detected nearby.
-    Absent,
-    /// Person detected in close proximity.
-    Close,
-    /// Person detected at distance.
-    Far,
-}
-
-/// Robot motion context.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub enum MotionContext {
-    /// Robot is stationary.
-    Static,
-    /// Robot is moving slowly.
-    Slow,
-    /// Robot is moving quickly.
-    Fast,
-}
-
-/// Robot orientation relative to starting heading.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub enum Orientation {
-    /// Robot is upright (not tilted beyond threshold).
-    Upright,
-    /// Robot is tilted beyond the upright threshold.
-    Tilted,
-}
-
-/// Time of day period.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub enum TimePeriod {
-    /// Daytime hours.
-    Day,
-    /// Evening hours.
-    Evening,
-    /// Night-time hours.
-    Night,
-}
-
-impl SensorVocabulary<6> for MbotSensors {
-    fn to_feature_vec(&self) -> [f32; 6] {
-        let b = match self.brightness {
-            BrightnessBand::Dark => 0.0,
-            BrightnessBand::Dim => 0.5,
-            BrightnessBand::Bright => 1.0,
-        };
-        let n = match self.noise {
-            NoiseBand::Quiet => 0.0,
-            NoiseBand::Moderate => 0.5,
-            NoiseBand::Loud => 1.0,
-        };
-        let p = match self.presence {
-            PresenceSignature::Absent => 0.0,
-            PresenceSignature::Far => 0.5,
-            PresenceSignature::Close => 1.0,
-        };
-        let m = match self.motion {
-            MotionContext::Static => 0.0,
-            MotionContext::Slow => 0.5,
-            MotionContext::Fast => 1.0,
-        };
-        let o = match self.orientation {
-            Orientation::Upright => 0.0,
-            Orientation::Tilted => 1.0,
-        };
-        let t = match self.time_period {
-            TimePeriod::Day => 0.0,
-            TimePeriod::Evening => 0.5,
-            TimePeriod::Night => 1.0,
-        };
-        [b, n, p, m, o, t]
-    }
-}
-
-/// Type alias for the canonical mBot2 context key.
-pub type MbotContextKey = ContextKey<MbotSensors, 6>;
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    fn bright_quiet() -> MbotContextKey {
-        ContextKey::new(MbotSensors {
-            brightness: BrightnessBand::Bright,
-            noise: NoiseBand::Quiet,
-            presence: PresenceSignature::Absent,
-            motion: MotionContext::Static,
-            orientation: Orientation::Upright,
-            time_period: TimePeriod::Day,
-        })
+    // Simple two-dimensional test vocabulary used throughout the unit tests.
+    // For a production 6-dimensional vocabulary see `ccf_core::mbot::MbotSensors`.
+    #[derive(Clone, Debug, PartialEq, Eq, Hash)]
+    struct TwoSensor { light: u8, noise: u8 } // 0=low, 1=mid, 2=high
+
+    impl SensorVocabulary<2> for TwoSensor {
+        fn to_feature_vec(&self) -> [f32; 2] {
+            [self.light as f32 / 2.0, self.noise as f32 / 2.0]
+        }
     }
 
-    fn dark_loud() -> MbotContextKey {
-        ContextKey::new(MbotSensors {
-            brightness: BrightnessBand::Dark,
-            noise: NoiseBand::Loud,
-            presence: PresenceSignature::Close,
-            motion: MotionContext::Fast,
-            orientation: Orientation::Tilted,
-            time_period: TimePeriod::Night,
-        })
+    fn bright_quiet() -> ContextKey<TwoSensor, 2> {
+        ContextKey::new(TwoSensor { light: 2, noise: 0 })
+    }
+
+    fn dark_loud() -> ContextKey<TwoSensor, 2> {
+        ContextKey::new(TwoSensor { light: 0, noise: 2 })
     }
 
     #[test]
@@ -307,8 +178,8 @@ mod tests {
         // Patent Claim 8: composite sensor vocabulary trait
         let k = bright_quiet();
         let vec = k.vocabulary.to_feature_vec();
-        assert_eq!(vec.len(), MbotSensors::FEATURE_DIM);
-        // Bright = 1.0, Quiet = 0.0
+        assert_eq!(vec.len(), TwoSensor::FEATURE_DIM);
+        // light=2 → 1.0, noise=0 → 0.0
         assert!((vec[0] - 1.0_f32).abs() < 1e-6);
         assert!((vec[1] - 0.0_f32).abs() < 1e-6);
     }

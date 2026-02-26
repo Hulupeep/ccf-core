@@ -9,10 +9,11 @@ use ccf_core::accumulator::{CoherenceAccumulator, CoherenceField};
 use ccf_core::boundary::MinCutBoundary;
 use ccf_core::phase::{Personality, PhaseSpace, SocialPhase};
 use ccf_core::sinkhorn::SinkhornKnopp;
-use ccf_core::vocabulary::{
-    BrightnessBand, ContextKey, MotionContext, MbotContextKey, MbotSensors, NoiseBand,
-    Orientation, PresenceSignature, SensorVocabulary, TimePeriod,
+use ccf_core::mbot::{
+    BrightnessBand, MbotContextKey, MbotSensors, MotionContext, NoiseBand,
+    Orientation, PresenceSignature, TimePeriod,
 };
+use ccf_core::vocabulary::{ContextKey, SensorVocabulary};
 
 // ─── Shared helpers ──────────────────────────────────────────────────────────
 

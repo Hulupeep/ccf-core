@@ -327,10 +327,11 @@ impl<V: SensorVocabulary<N>, const N: usize> core::fmt::Debug for CoherenceField
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::vocabulary::{
-        BrightnessBand, ContextKey, MotionContext, MbotSensors, NoiseBand, Orientation,
+    use crate::mbot::{
+        BrightnessBand, MbotSensors, MotionContext, NoiseBand, Orientation,
         PresenceSignature, TimePeriod,
     };
+    use crate::vocabulary::ContextKey;
 
     // ── Helpers ──────────────────────────────────────────────────────────
 

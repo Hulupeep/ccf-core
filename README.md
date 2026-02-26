@@ -1,6 +1,6 @@
 # ccf-core
 
-**Contextual Coherence Fields** — context-aware relational trust for embedded systems and autonomous agents.
+**Contextual Coherence Fields** — earned relational trust for robots, agents, and autonomous systems.
 
 [![crates.io](https://img.shields.io/crates/v/ccf-core)](https://crates.io/crates/ccf-core)
 [![docs.rs](https://docs.rs/ccf-core/badge.svg)](https://docs.rs/ccf-core)
@@ -9,31 +9,32 @@
 
 ---
 
-## The Problem
+## Any robot or agent can now have emergent social behaviour
 
-Most embedded behavioral systems treat trust and social state as a single global value.
-One loud noise and the whole device goes into "scared" mode — regardless of whether the
-device has spent 200 hours happily operating in that same noisy environment.
+Not scripted. Not rule-based. **Earned** — the same way a person earns trust.
 
-**The environment matters.** A robot that has learned to trust a busy kitchen should not
-retreat just because the kitchen is noisy — but it absolutely should retreat if it encounters
-an unfamiliar dark room for the first time.
+A person who has spent every morning in a busy kitchen for two years is not threatened
+by the noise. That same person in an unfamiliar basement for the first time is cautious.
+The behaviour is not a rule. It emerges from accumulated experience in a specific context.
+
+ccf-core gives this capacity to any autonomous system — from a $50 robot to a deployed
+AI agent. Your device builds a **field** of trust states, one per sensory context, learned
+continuously from real interaction. The behaviour that results is a product of what the
+system has actually experienced, not what a programmer anticipated.
+
+This is the architecture behind the mBot2 reference demo: a sub-$100 programmable robot
+that develops genuine context-sensitive social behaviour, entirely on-device with no cloud,
+no ML model, no scripted emotional state. [See the example →](examples/mbot2.rs)
 
 ---
 
 ## What ccf-core Gives You
 
-A **field** of trust states — one per sensory context — that your device learns continuously
-from experience. Trust earned in one environment stays in that environment. It doesn't
-bleed into unfamiliar contexts until the device explicitly learns they are similar.
-
-This gives your system:
-
-- **Context-specific trust** — bright+quiet room and dark+loud room have independent trust histories
-- **Earned resilience** — trust that has been built up through repeated interaction is protected against transient negative events
-- **Four expressive behavioral phases** — `ShyObserver`, `StartledRetreat`, `QuietlyBeloved`, `ProtectiveGuardian` — each with distinct LED tint, motor scale, and narration depth outputs
-- **Personality** — tune curiosity, startle sensitivity, and recovery rate per device
-- **Emergent comfort-zone boundaries** — the device discovers which contexts belong together via graph min-cut; you don't configure it
+- **Context-specific trust** — every distinct sensory environment has its own independent trust history
+- **Earned resilience** — trust built through repeated positive interaction is protected against transient negative events; a single bad moment cannot erase an established relationship
+- **Four expressive behavioral phases** — `ShyObserver`, `StartledRetreat`, `QuietlyBeloved`, `ProtectiveGuardian` — with distinct LED tint, motor scale, and narration depth per phase
+- **Personality** — tune curiosity, startle sensitivity, and recovery rate per device or agent
+- **Emergent comfort-zone boundaries** — the system discovers which contexts belong together via graph min-cut; you don't configure a threshold
 - **`no_std` by default** — runs on Cortex-M, ESP32, RP2040, and any bare-metal target with no heap required
 
 ---
@@ -181,10 +182,12 @@ starts fresh in another — exactly as you'd want.
 
 ---
 
-## Built-in Sensor Vocabulary: `MbotSensors`
+## Reference Implementation: mBot2 on $50 Hardware
 
-ccf-core ships `MbotSensors` — a ready-to-use 6-dimensional vocabulary covering the
-dimensions most relevant to social robotics:
+`ccf_core::mbot` ships a complete 6-dimensional sensor vocabulary for the
+[mBot2](https://www.makeblock.com/mbot2) — a programmable robot by Makeblock that
+retails for around $50–$80 USD. It is the reference demo for what ccf-core makes possible:
+emergent social behaviour on cheap commodity hardware, no cloud required.
 
 | Field | Type | Dimensions |
 |-------|------|-----------|
@@ -196,10 +199,11 @@ dimensions most relevant to social robotics:
 | `time_period` | `TimePeriod` | Day / Evening / Night |
 
 ```rust
-use ccf_core::vocabulary::{MbotSensors, MbotContextKey,
+use ccf_core::mbot::{MbotSensors, MbotContextKey,
     BrightnessBand, NoiseBand, PresenceSignature, MotionContext, Orientation, TimePeriod};
+use ccf_core::vocabulary::ContextKey;
 
-let key = MbotContextKey::new(MbotSensors {
+let key = ContextKey::new(MbotSensors {
     brightness:  BrightnessBand::Bright,
     noise:       NoiseBand::Quiet,
     presence:    PresenceSignature::Close,
@@ -208,6 +212,9 @@ let key = MbotContextKey::new(MbotSensors {
     time_period: TimePeriod::Day,
 });
 ```
+
+See `examples/mbot2.rs` for a full simulated CCF loop — 80 ticks of earned trust,
+a startle event, and recovery — with printed output showing phase transitions and LED tint.
 
 ---
 
