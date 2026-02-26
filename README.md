@@ -75,6 +75,47 @@ unfamiliar location. CCF gives you the context-sensitivity layer above your sens
 
 ---
 
+## How it works
+
+Three mathematical primitives combine to produce emergent behaviour. None works alone.
+
+**1. Context-keyed accumulators**
+
+Trust is not a single global value. Every distinct sensory environment has its own
+independent trust history, built from real interactions in that specific context.
+A robot that trusts the living room has zero trust in the basement — because it has
+never been there. Histories never cross-contaminate.
+
+**2. The minimum gate**
+
+Effective coherence requires agreement between two signals: what the system has
+*learned* (accumulated context trust) and what it is *experiencing right now*
+(the instant sensor reading).
+
+> "Both must be true, or I stay reserved."
+
+Familiar contexts buffer noise — a single bad event cannot erase weeks of earned trust.
+Unfamiliar contexts demand proof before any expressiveness is unlocked.
+
+**3. Graph min-cut boundary**
+
+As contexts accumulate trust histories, the system builds a trust-weighted graph
+where similar contexts share stronger edges. Stoer-Wagner global min-cut finds
+the cheapest way to divide it into two clusters.
+
+> "This room feels different from that room."
+
+The comfort zone *emerges* from the trust topology. You don't configure a threshold —
+the algorithm discovers the boundary.
+
+**Plus: trust mixing**
+
+A small amount of trust transfers between similar contexts. Kitchen morning trust
+warms the hallway a little. `SinkhornKnopp` projects the transfer matrix onto the
+Birkhoff polytope so no single context dominates allocation.
+
+---
+
 ## Quick Start
 
 ```toml
@@ -146,13 +187,16 @@ loop {
     let key = ContextKey::new(sensors);
 
     // Record a positive interaction (person waved, task succeeded, user smiled, etc.)
-    field.positive_interaction(&key, &personality, tick);
+    // `alone: bool` — true if no external stimulus, just passive presence
+    field.positive_interaction(&key, &personality, tick, false);
 
     // Optionally record a negative event (loud noise, obstacle, failed task)
     // field.negative_interaction(&key, &personality, tick);
 
     // Read the effective coherence for the current context
-    let coherence = field.effective_coherence(&key);
+    // `instant` is your raw sensor reading for this tick, normalised to [0.0, 1.0]
+    let instant: f32 = 0.9; // your system provides this
+    let coherence = field.effective_coherence(instant, &key);
 
     // Classify behavioral phase (tension comes from your homeostasis / task layer)
     let tension: f32 = 0.2; // your system provides this
@@ -272,9 +316,9 @@ boundary.report_context_with_key(&bright_near_key, coherence_bright_near);
 boundary.report_context_with_key(&dark_empty_key,  coherence_dark_empty);
 
 // The partition tells you which side each context is on
-let (inside, outside) = boundary.partition();
-// inside:  contexts the device has "adopted" (high trust cluster)
-// outside: unfamiliar or distrusted contexts
+let result = boundary.partition();
+// result.partition_s:          hashes of "inside" contexts (adopted, high trust)
+// result.partition_complement: hashes of "outside" contexts (unfamiliar/distrusted)
 
 // The min-cut value measures how sharp the comfort-zone edge is
 let edge_sharpness = boundary.min_cut_value();
@@ -321,14 +365,46 @@ It compiles for any target Rust supports:
 | Feature | Default | Effect |
 |---------|---------|--------|
 | `std` | off | Enables `CoherenceField::all_entries()` and persistence helpers |
-| `serde` | off | Derives `Serialize` / `Deserialize` on all public types |
+| `serde` | off | Derives `Serialize` / `Deserialize` on all public types; enables `ccf_core::seg` |
+
+---
+
+## Persistence — saving and restoring trust
+
+Enable the `serde` feature to snapshot a live field and restore it later. A device
+that loses power picks up exactly where it left off — one interaction to re-enter
+`QuietlyBeloved` in a familiar context instead of starting from zero.
+
+```toml
+ccf-core = { version = "0.1", features = ["serde"] }
+```
+
+```rust
+use ccf_core::seg::CcfSegSnapshot;
+
+// After your robot has been running for a while — save its trust history
+let snapshot = CcfSegSnapshot::from_field(&field, &personality, created_at, last_active, total_interactions);
+let json = serde_json::to_string(&snapshot).unwrap();
+// Write json to flash / SD card / file
+
+// On next boot — restore it
+let snapshot: CcfSegSnapshot = serde_json::from_str(&json).unwrap();
+// snapshot.contexts contains all context hashes + coherence values
+// snapshot.personality contains the personality modulators
+// Warm-start: the robot re-enters familiar contexts in one interaction,
+// rather than rebuilding from zero.
+```
+
+The snapshot is vocabulary-erased — only the FNV-1a context hashes are stored,
+not the sensor readings themselves. Compact and transport-safe.
 
 ---
 
 ## Test Coverage
 
 ```
-cargo test    # 98 tests: 64 unit + 34 patent-claim integration tests
+cargo test                  # 98 tests: 64 unit + 34 patent-claim integration tests
+cargo test --features serde # 106 tests: adds 8 CCF_SEG round-trip tests
 ```
 
 The integration test file `tests/patent_claims.rs` contains one named test per patent

@@ -4,17 +4,62 @@
 //!
 //! Patent pending: US Provisional Application 63/988,438 (priority date 23 Feb 2026).
 //!
-//! ## What This Is
+//! ---
 //!
-//! CCF is a computational architecture for emergent social behaviour in autonomous systems.
-//! Instead of a single emotional state, an agent maintains a *field* of trust states —
-//! one per sensory context — learned continuously from experience.
+//! ## This is not a behaviour system. It is a mathematical architecture.
 //!
-//! Trust earned in a bright quiet room does not transfer to a dark noisy room unless the
-//! field explicitly learns they are similar. The agent remembers the shape of its own
-//! comfort zone.
+//! Three primitives combine to produce emergent social behaviour without a single
+//! line of behavioural code.
 //!
-//! ## Patent Claim Map
+//! **Context-keyed accumulators** — trust is not a single global value. Every distinct
+//! sensory environment has its own independent trust history. Bright-and-quiet is not
+//! the same as dark-and-loud, and the two histories never share state. A robot that
+//! trusts the living room starts at zero in the basement.
+//!
+//! **The minimum gate** — effective coherence requires agreement between two signals:
+//! what the system has *learned* (accumulated context trust) and what it is
+//! *experiencing right now* (the instant sensor reading).
+//! > "Both must be true, or I stay reserved."
+//!
+//! Familiar contexts buffer noise — a single bad moment cannot erase earned trust.
+//! Unfamiliar contexts demand proof before any expressiveness is permitted.
+//!
+//! **Graph min-cut boundary** — as contexts accumulate trust histories, the system
+//! builds a trust-weighted graph. Stoer-Wagner global min-cut finds the cheapest
+//! place to divide it into two clusters.
+//! > "This room feels different from that room."
+//!
+//! The comfort zone *emerges* from the topology — you do not configure a threshold.
+//!
+//! None of these produces social behaviour alone. Together they produce shyness,
+//! warmth, protectiveness, and earned fluency — without programming any of it.
+//!
+//! ---
+//!
+//! ## The pipeline
+//!
+//! ```text
+//! Sensors → ContextKey → CoherenceField → SocialPhase → Outputs
+//!                ↑              ↑               ↑
+//!         SensorVocabulary  Personality    PhaseSpace
+//!                               ↓
+//!                       MinCutBoundary  (comfort zone)
+//!                       SinkhornKnopp  (trust mixing)
+//! ```
+//!
+//! ## Module overview
+//!
+//! | Module | Key types | What it does |
+//! |--------|-----------|--------------|
+//! | [`vocabulary`] | [`SensorVocabulary`], [`ContextKey`] | Define your sensor space; hash + cosine similarity |
+//! | [`accumulator`] | [`CoherenceAccumulator`], [`CoherenceField`] | Per-context trust with earned floor and minimum gate |
+//! | [`phase`] | [`SocialPhase`], [`Personality`], [`PhaseSpace`] | Four-quadrant phase classifier with Schmitt trigger hysteresis |
+//! | [`boundary`] | [`MinCutBoundary`] | Stoer-Wagner comfort-zone boundary discovery |
+//! | [`sinkhorn`] | [`SinkhornKnopp`] | Doubly stochastic trust mixing |
+//! | [`mbot`] | [`mbot::MbotSensors`] | Reference 6-dimensional vocabulary for mBot2 ($50 hardware) |
+//! | [`seg`] | [`seg::CcfSegSnapshot`] | Serialisable field snapshot for persistence (requires `serde` feature) |
+//!
+//! ## Patent claim map
 //!
 //! | Type | Patent Claims | Description |
 //! |------|--------------|-------------|
@@ -27,10 +72,11 @@
 //! | [`MinCutBoundary`] | 9–12 | Stoer-Wagner comfort-zone boundary discovery |
 //! | [`Personality`] | 3 (modulators) | Dynamic modulators: curiosity, startle sensitivity, recovery |
 //!
-//! ## no_std
+//! ## `no_std`
 //!
-//! This crate is `no_std` by default. Enable the `std` feature for persistence helpers.
-//! Enable the `serde` feature for serialisation support (required for CCF_SEG / RVF).
+//! This crate is `#![no_std]` by default with no heap required. Enable the `std` feature
+//! for persistence helpers. Enable the `serde` feature for serialisation support
+//! (required for [`seg::CcfSegSnapshot`] and RVF persistence).
 //!
 //! ## License
 //!
