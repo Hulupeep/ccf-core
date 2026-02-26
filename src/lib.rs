@@ -84,13 +84,13 @@
 //! Change date: 23 February 2032 — Apache License 2.0.
 //! Commercial production use requires a license from Flout Labs (cbyrne@floutlabs.com).
 
-#![no_std]
+#![cfg_attr(not(any(feature = "std", feature = "python-ffi")), no_std)]
 #![deny(unsafe_code)]
 #![deny(missing_docs)]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
 // Pull in std when the feature is enabled (for persistence helpers, etc.)
-#[cfg(feature = "std")]
+#[cfg(any(feature = "std", feature = "python-ffi"))]
 extern crate std;
 
 // Placeholder modules — populated by Phase 9 stories #48–#52
@@ -102,3 +102,6 @@ pub mod boundary;     // #51: MinCutBoundary / Stoer-Wagner
 pub mod mbot;         // mBot2 reference vocabulary (MbotSensors, 6-dim)
 #[cfg(feature = "serde")]
 pub mod seg;          // #53: CCF_SEG snapshot format
+
+#[cfg(feature = "python-ffi")]
+pub mod ffi;

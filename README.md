@@ -346,6 +346,46 @@ let result = sk.project(&mut trust_matrix);
 
 ---
 
+## Python
+
+```toml
+ccf-core = { version = "0.1", features = ["python-ffi"] }
+```
+
+Build a Python extension with [maturin](https://github.com/PyO3/maturin):
+
+```bash
+pip install maturin
+maturin develop --features python-ffi
+```
+
+```python
+from ccf_core import CoherenceField, Personality, SocialPhase, PhaseSpace
+
+personality = Personality(curiosity_drive=0.7, startle_sensitivity=0.3, recovery_speed=0.6)
+field = CoherenceField()
+ps = PhaseSpace()
+phase = SocialPhase.ShyObserver
+
+# feature_vec: 6 floats [0.0, 1.0]
+# brightness, noise, presence, motion, orientation, time_of_day
+features = [0.8, 0.0, 1.0, 0.0, 1.0, 0.5]  # bright, quiet, close, still, upright, day
+
+for tick in range(50):
+    field.positive_interaction(features, personality, tick=tick, alone=False)
+
+coherence = field.effective_coherence(0.9, features)
+phase = SocialPhase.classify(coherence, tension=0.1, current=phase, space=ps)
+print(phase)                    # SocialPhase.QuietlyBeloved
+print(phase.led_tint())         # [60, 120, 200]
+print(phase.expression_scale()) # 1.0
+```
+
+The Python API uses 6-dimensional feature vectors matching the mBot2 vocabulary.
+For custom sensor dimensions, use the Rust API directly.
+
+---
+
 ## Platform Support
 
 ccf-core is `#![no_std]` with no heap allocation required in the default configuration.
