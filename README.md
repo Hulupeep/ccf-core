@@ -5,7 +5,8 @@
 [![crates.io](https://img.shields.io/crates/v/ccf-core)](https://crates.io/crates/ccf-core)
 [![docs.rs](https://docs.rs/ccf-core/badge.svg)](https://docs.rs/ccf-core)
 [![License: BUSL-1.1](https://img.shields.io/badge/license-BUSL--1.1-blue)](LICENSE)
-[![Patent Pending](https://img.shields.io/badge/patent-pending%20US%2063%2F988%2C438-lightgrey)](https://github.com/Hulupeep/ccf-core)
+[![Patent Pending](https://img.shields.io/badge/patent-pending%20US%2063%2F988%2C438-lightgrey)](https://theshyrobot.com/patent)
+[![Website](https://img.shields.io/badge/website-theshyrobot.com-4ecdc4)](https://theshyrobot.com)
 
 ---
 
@@ -25,6 +26,8 @@ system has actually experienced, not what a programmer anticipated.
 This is the architecture behind the mBot2 reference demo: a sub-$100 programmable robot
 that develops genuine context-sensitive social behaviour, entirely on-device with no cloud,
 no ML model, no scripted emotional state. [See the example →](examples/mbot2.rs)
+
+**[theshyrobot.com](https://theshyrobot.com)** — use cases, how it works, patent claim map, get-started guide.
 
 ---
 
@@ -352,11 +355,22 @@ let result = sk.project(&mut trust_matrix);
 ccf-core = { version = "0.1", features = ["python-ffi"] }
 ```
 
-Build a Python extension with [maturin](https://github.com/PyO3/maturin):
+Build a Python extension with [maturin](https://github.com/PyO3/maturin). Create a
+thin wrapper project with a `pyproject.toml` that depends on ccf-core:
+
+```toml
+# pyproject.toml
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[tool.maturin]
+features = ["python-ffi"]
+```
 
 ```bash
 pip install maturin
-maturin develop --features python-ffi
+maturin develop
 ```
 
 ```python
