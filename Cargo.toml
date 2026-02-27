@@ -19,6 +19,7 @@ std = []
 serde = ["dep:serde"]
 python-ffi = ["dep:pyo3", "std"]
 hierarchical = ["dep:heapless"]
+tiered-contexts = ["dep:heapless"]
 
 [dependencies]
 hashbrown = { version = "0.14", default-features = false, features = ["ahash"] }

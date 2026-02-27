@@ -118,3 +118,15 @@ pub mod ffi;
 /// | [`mixing::CoherenceCluster`] | Per-cluster intra-mixing state |
 #[cfg(feature = "hierarchical")]
 pub mod mixing;
+
+/// Two-tier context key cardinality management.
+///
+/// Enabled by `features = ["tiered-contexts"]`.  Bounds the accumulator map
+/// on production platforms with rich sensor vocabularies.
+///
+/// | Type | Patent Claims |
+/// |------|--------------|
+/// | [`cardinality::TieredContextMap`] | Continuation Claims A–D |
+/// | [`cardinality::merge_accumulators`] | Claim B (honesty-preserving merge) |
+#[cfg(feature = "tiered-contexts")]
+pub mod cardinality;
