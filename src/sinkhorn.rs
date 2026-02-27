@@ -67,6 +67,75 @@ impl SinkhornKnopp {
     /// Patent Claim 21: bounded mixing (no row dominates after projection).
     /// Patent Claim 22: non-negativity preservation.
     /// Patent Claim 23: Birkhoff polytope membership.
+    /// Project an n×n matrix stored as a flat row-major slice in-place.
+    ///
+    /// This is the runtime-n variant of [`Self::project`] used by the
+    /// hierarchical mixer when cluster sizes are known only at runtime.
+    ///
+    /// The slice must have length `n * n` (debug-checked).  Semantically
+    /// identical to `project::<N>` applied to an N×N matrix.
+    ///
+    /// # Invariant I-HMX-003
+    /// Reuses the Sinkhorn-Knopp implementation — same iteration structure,
+    /// same convergence criterion.
+    pub fn project_flat(&self, m: &mut [f32], n: usize) -> ConvergenceResult {
+        debug_assert_eq!(m.len(), n * n, "project_flat: slice length must be n*n");
+
+        for iter in 0..self.max_iterations {
+            // Row normalisation
+            for i in 0..n {
+                let s: f32 = m[i * n..(i + 1) * n].iter().sum();
+                if s > 1e-12 {
+                    let inv = 1.0 / s;
+                    for x in &mut m[i * n..(i + 1) * n] {
+                        *x *= inv;
+                    }
+                }
+            }
+
+            // Column normalisation
+            for j in 0..n {
+                let s: f32 = (0..n).map(|i| m[i * n + j]).sum();
+                if s > 1e-12 {
+                    let inv = 1.0 / s;
+                    for i in 0..n {
+                        m[i * n + j] *= inv;
+                    }
+                }
+            }
+
+            // Check convergence: max |row_sum - 1.0|
+            let residual = (0..n)
+                .map(|i| {
+                    let s: f32 = m[i * n..(i + 1) * n].iter().sum();
+                    (s - 1.0_f32).abs()
+                })
+                .fold(0.0_f32, f32::max);
+
+            if residual < self.tolerance {
+                return ConvergenceResult {
+                    converged: true,
+                    iterations: iter + 1,
+                    residual,
+                };
+            }
+        }
+
+        let residual = (0..n)
+            .map(|i| {
+                let s: f32 = m[i * n..(i + 1) * n].iter().sum();
+                (s - 1.0_f32).abs()
+            })
+            .fold(0.0_f32, f32::max);
+
+        ConvergenceResult {
+            converged: false,
+            iterations: self.max_iterations,
+            residual,
+        }
+    }
+
+    /// Project an N×N matrix (const-generic form) in-place to the Birkhoff polytope.
     pub fn project<const N: usize>(&self, m: &mut [[f32; N]; N]) -> ConvergenceResult {
         for iter in 0..self.max_iterations {
             // Row normalisation

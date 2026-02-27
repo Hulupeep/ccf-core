@@ -105,3 +105,16 @@ pub mod seg;          // #53: CCF_SEG snapshot format
 
 #[cfg(feature = "python-ffi")]
 pub mod ffi;
+
+/// Adaptive coherence mixing — flat or hierarchical.
+///
+/// Enabled by `features = ["hierarchical"]`.  Compiles to nothing when
+/// the feature is absent.
+///
+/// | Type | Patent Claims |
+/// |------|--------------|
+/// | [`mixing::HierarchicalMixer`] | Continuation A–D on Claims 19–23 |
+/// | [`mixing::MixingStrategy`] | Adaptive mode selection |
+/// | [`mixing::CoherenceCluster`] | Per-cluster intra-mixing state |
+#[cfg(feature = "hierarchical")]
+pub mod mixing;

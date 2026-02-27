@@ -18,9 +18,11 @@ default = []
 std = []
 serde = ["dep:serde"]
 python-ffi = ["dep:pyo3", "std"]
+hierarchical = ["dep:heapless"]
 
 [dependencies]
 hashbrown = { version = "0.14", default-features = false, features = ["ahash"] }
+heapless = { version = "0.8", default-features = false, optional = true }
 serde = { version = "1", default-features = false, features = ["derive", "alloc"], optional = true }
 pyo3 = { version = "0.22", features = ["extension-module"], optional = true }
 
