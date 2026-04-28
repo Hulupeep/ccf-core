@@ -3,6 +3,7 @@
 This is a frozen snapshot. The active artifact is the GitHub epic issue and Project board.
 
 Generated: 2026-04-27T17:41:13Z
+Updated: 2026-04-28T06:54:38Z for Provisional 6 critical-path and microCCF spike ordering.
 
 ## Live Artifacts
 
@@ -22,15 +23,19 @@ The 2026-04-27 audit found that v0.1.x did not implement the canonical QAC repre
 
 As of 2026-04-28, Provisional 6 is not filed. Stories #5, #10, #11, #13, and #14 are therefore spec-lock blockers before implementation: the QAC theorem source, κ_t formula, ε_t behavior, pinned-zero mechanism, and falsifiability classes must be frozen in an unfiled Prov 6 draft, filed Prov 6, or equivalent signed mathematical specification before those stories start.
 
+Operator update on 2026-04-28: Provisional 6 is on the critical path. While Prov 6 is being locked, the immediate next action is #26, the microCCF Seed deployment spike driven by `/home/xanacan/projects/code/mbot/CCF/docs/specs/microccf_prompt.md`. After that spike, implementation proceeds by writing the new v1.0 core against the locked canonical spec. The current v0.1.x core is not the target for incremental repair.
+
 ## Dependency Graph
 
+- Immediate deployment proof: #26.
+- Spec lock: Prov 6 draft/filed/signed equivalent before #5, #10, #11, #13, and #14 enter implementation.
 - Phase 0 scaffold: #2, #3, #4.
 - Canonical math: #5, #6, #7.
 - Min-cut and certificate substrate: #8, #9, #10, #11, #14, #15.
 - State management: #12, #13.
-- no_std and Seed core validation: #15, #16.
+- no_std and Seed core validation: #15, #16, informed by #26.
 - Agent runtime and API: #17, #18, #19, #20.
-- Deployment and operational proof: #21, #22.
+- Deployment and operational proof: #21, #22, informed by #26.
 - Release closure: #23, #24, #25.
 
 ## Stories
@@ -61,6 +66,7 @@ As of 2026-04-28, Provisional 6 is not filed. Stories #5, #10, #11, #13, and #14
 | 21 | [#23](https://github.com/Hulupeep/ccf-core/issues/23) | Performance validation against PRD §8 bounds | `phase:7-release` | #22 [20] | criterion 10, criterion 11, criterion 12 |
 | 22 | [#24](https://github.com/Hulupeep/ccf-core/issues/24) | Documentation suite | `phase:7-release` | #3 [01], #15 [13], #19 [17], #21 [19], #22 [20] | criterion 13 |
 | 23 | [#25](https://github.com/Hulupeep/ccf-core/issues/25) | Release post draft and v1.0.0 publish to crates.io | `phase:7-release` | #22 [20], #23 [21], #24 [22] | criterion 8, criterion 13, criterion 14 |
+| 24 | [#26](https://github.com/Hulupeep/ccf-core/issues/26) | microCCF Seed deployment spike | `phase:6-deploy` | Prov 6 critical path acknowledged; microCCF prompt available | deployment spike, informs criteria 10-12 |
 
 ## Spec-Lock Blockers
 
@@ -69,6 +75,10 @@ As of 2026-04-28, Provisional 6 is not filed. Stories #5, #10, #11, #13, and #14
 - [ ] #11 [09] ε_t pre-check: Prov 6 ε_t behavior frozen/filed.
 - [ ] #13 [11] Pinned-zero categories: Prov 6 and/or PiCar-X pinned-zero specification frozen/filed.
 - [ ] #14 [12] Falsifiability class instrumentation: Prov 6 excursion/classification semantics frozen/filed.
+
+## Immediate Next Action
+
+- [ ] [#26](https://github.com/Hulupeep/ccf-core/issues/26) [24] microCCF Seed deployment spike: use `/home/xanacan/projects/code/mbot/CCF/docs/specs/microccf_prompt.md` to test Seed cross-compile, systemd, `/state`, witness-chain write, latency, WiFi, dashboard visibility, and reboot survival in a separate throwaway repo.
 
 ## Story Checklist
 
@@ -96,6 +106,7 @@ As of 2026-04-28, Provisional 6 is not filed. Stories #5, #10, #11, #13, and #14
 - [ ] [#23](https://github.com/Hulupeep/ccf-core/issues/23) [21] Performance validation against PRD §8 bounds
 - [ ] [#24](https://github.com/Hulupeep/ccf-core/issues/24) [22] Documentation suite
 - [ ] [#25](https://github.com/Hulupeep/ccf-core/issues/25) [23] Release post draft and v1.0.0 publish to crates.io
+- [ ] [#26](https://github.com/Hulupeep/ccf-core/issues/26) [24] microCCF Seed deployment spike
 
 ## SpecFlow Shape Used
 

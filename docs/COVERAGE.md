@@ -8,6 +8,8 @@ Every PRD §2 acceptance criterion appears below with at least one story issue. 
 
 Spec-lock note: Provisional 6 is not filed as of 2026-04-28. Criteria 1, 4, 5, and 7 include requirements whose exact QAC/κ_t/ε_t/pinned-zero sources must be frozen in an unfiled Prov 6 draft, filed Prov 6, or equivalent signed mathematical specification before implementation of the dependent stories.
 
+Critical-path note: Provisional 6 is now treated as critical path for canonical implementation. The immediate non-canonical next action is [#26](https://github.com/Hulupeep/ccf-core/issues/26), the microCCF Seed deployment spike using `/home/xanacan/projects/code/mbot/CCF/docs/specs/microccf_prompt.md`. That spike is not a PRD §2 acceptance-criterion closure by itself; it is deployment evidence that informs criteria 10-12 before the new v1.0 core is written.
+
 | PRD §2 Criterion | Requirement | Story Issue(s) |
 |---:|---|---|
 | 1 | Canonical QAC update form with positive diagonal gauges, scalar alpha, Hadamard product, reference matrix R. | [#5](https://github.com/Hulupeep/ccf-core/issues/5) [03] QAC update step, [#18](https://github.com/Hulupeep/ccf-core/issues/18) [16] ccf-agent canonical CCF runtime loop |
@@ -28,3 +30,5 @@ Spec-lock note: Provisional 6 is not filed as of 2026-04-28. Criteria 1, 4, 5, a
 ## Reverse Justification
 
 Every story issue #2-#25 maps to at least one PRD criterion through its issue body and the table above. Stories that do not directly close a criterion are scaffold/dependency stories required to make one or more criterion gates mechanically runnable.
+
+Issue #26 is a P0 spike, not a closure story. It exists to test Seed deployment assumptions before stories #16-#22 commit to a ccf-agent architecture.
