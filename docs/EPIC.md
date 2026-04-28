@@ -20,6 +20,8 @@ Deliver the PRD success state: a user SSHs to a Cognitum Seed, runs `./install.s
 
 The 2026-04-27 audit found that v0.1.x did not implement the canonical QAC representation theorem: Claim 1 used scalar arithmetic rather than matrix-form QAC, Claim 2 used a weighted average rather than hard min, Claim 3 had no Rust Sinkhorn-Knopp projection, and Claims 4, 5, and 7 were not implemented. v1.0 is the canonical implementation contract that remediates those findings.
 
+As of 2026-04-28, Provisional 6 is not filed. Stories #5, #10, #11, #13, and #14 are therefore spec-lock blockers before implementation: the QAC theorem source, κ_t formula, ε_t behavior, pinned-zero mechanism, and falsifiability classes must be frozen in an unfiled Prov 6 draft, filed Prov 6, or equivalent signed mathematical specification before those stories start.
+
 ## Dependency Graph
 
 - Phase 0 scaffold: #2, #3, #4.
@@ -59,6 +61,14 @@ The 2026-04-27 audit found that v0.1.x did not implement the canonical QAC repre
 | 21 | [#23](https://github.com/Hulupeep/ccf-core/issues/23) | Performance validation against PRD §8 bounds | `phase:7-release` | #22 [20] | criterion 10, criterion 11, criterion 12 |
 | 22 | [#24](https://github.com/Hulupeep/ccf-core/issues/24) | Documentation suite | `phase:7-release` | #3 [01], #15 [13], #19 [17], #21 [19], #22 [20] | criterion 13 |
 | 23 | [#25](https://github.com/Hulupeep/ccf-core/issues/25) | Release post draft and v1.0.0 publish to crates.io | `phase:7-release` | #22 [20], #23 [21], #24 [22] | criterion 8, criterion 13, criterion 14 |
+
+## Spec-Lock Blockers
+
+- [ ] #5 [03] QAC update step: QAC representation theorem source frozen/filed.
+- [ ] #10 [08] κ_t runtime certificate: Prov 6 formula frozen/filed.
+- [ ] #11 [09] ε_t pre-check: Prov 6 ε_t behavior frozen/filed.
+- [ ] #13 [11] Pinned-zero categories: Prov 6 and/or PiCar-X pinned-zero specification frozen/filed.
+- [ ] #14 [12] Falsifiability class instrumentation: Prov 6 excursion/classification semantics frozen/filed.
 
 ## Story Checklist
 

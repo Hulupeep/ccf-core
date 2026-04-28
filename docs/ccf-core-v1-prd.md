@@ -8,7 +8,7 @@
 | **Status** | DRAFT — awaiting approval |
 | **Date** | 2026-04-27 |
 | **Trigger** | ccf-core v0.1.4 audit (2026-04-27) found Claims 1, 2, and 3 of the QAC representation theorem FAIL. Crate ships scalar arithmetic where the patent specifies matrix-form QAC, weighted average where it specifies hard min, and no Sinkhorn-Knopp projection at all. |
-| **Patent backing** | US Provisionals 1, 2, 3, 4, 5 (filed); 6 (drafting). Non-provisional deadline: 2027-02-23. |
+| **Patent backing** | US Provisionals 1, 2, 3, 4, 5 (filed); Provisional 6 is not filed as of 2026-04-28. Any κ_t, ε_t, pinned-zero, or exact QAC-theorem implementation depends on a frozen/filed Prov 6 or equivalent math-spec source. Non-provisional deadline: 2027-02-23. |
 | **License** | BSL 1.1 with 2032-04-15 Apache 2.0 change date (matches v0.1.x) |
 
 ---
@@ -91,7 +91,7 @@ A claim fails any criterion → v1.0.0 does not ship. No partial releases.
 - The seven QAC representation theorem claims, all implemented faithfully
 - **Stoer-Wagner min-cut partitioning, in core, no_std-compatible** (per §6.1)
 - Tests asserting canonical-form fidelity for each claim
-- κ_t and ε_t for Provisional 6 backing
+- κ_t and ε_t for Provisional 6 backing, contingent on freezing or filing the currently unfiled Prov 6 specification before implementation
 - Public library API for: per-context update, gate evaluation, current state query, certificate streaming
 - **`ccf-agent` reference binary** (per §1.5) — runtime host that uses the library, connects to a Cognitum Seed, exposes state via HTTP
 - **Seed deployment artifacts** — systemd unit, install script, example configuration (per §1.5)
@@ -124,6 +124,12 @@ A claim fails any criterion → v1.0.0 does not ship. No partial releases.
 Each subsection below specifies one of the seven claims. The implementer must produce code that matches the specification, plus a test that asserts the match.
 
 ### 4.1 The QAC update step (Claim 1)
+
+**Spec provenance note:** The exact formula in this section was not found in the
+filed Provisionals 1-5 corpus under `docs/patentdocs/currentfiling/`. As of
+2026-04-28, Provisional 6 is not filed. Implementation of this story MUST NOT
+begin until the QAC representation theorem source is frozen in an unfiled Prov 6
+draft, filed Prov 6, or an equivalent signed mathematical specification.
 
 **Canonical form:**
 
@@ -206,7 +212,9 @@ while not converged:
 
 `κ_t` is a non-negative scalar quantity computed at every update step that measures the deviation between the executed update and the canonical QAC form. `κ_t = 0` (within numerical tolerance) means the implementation is faithful at this step.
 
-**Specification source:** Provisional 6 draft. Implementation must match the Prov 6 formula exactly.
+**Specification source:** Provisional 6 draft. Provisional 6 is not filed as of
+2026-04-28. Implementation must match the frozen/filed Prov 6 formula exactly,
+and this story is blocked until that formula is available.
 
 **Implementation requirements:**
 - Computed at every update step. Not periodically. Not on demand.
@@ -219,6 +227,10 @@ while not converged:
 - Assert that an excursion triggers gate fail-closed within one tick.
 
 ### 4.5 ε_t pre-check (Claim 5 / Provisional 6)
+
+**Spec provenance note:** Provisional 6 is not filed as of 2026-04-28. The ε_t
+pre-check is a Prov 6-dependent implementation requirement and is blocked until
+the unfiled draft is frozen or filed.
 
 **Canonical form:**
 
@@ -260,6 +272,11 @@ Each ContextKey K_i has its own independent accumulator A_t^{K_i} with its own l
 - Assert that adding a new context does not invalidate existing context state.
 
 ### 4.7 Permanently restricted entries / pinned-zero categories (Claim 7)
+
+**Spec provenance note:** The structural pinned-zero mechanism was not located in
+the filed Provisionals 1-5 corpus under `docs/patentdocs/currentfiling/`.
+Implementation is blocked until the unfiled Prov 6 and/or PiCar-X pinned-zero
+specification is located and frozen or filed.
 
 **Canonical form:**
 
@@ -536,7 +553,7 @@ Shipped with v1.0.0:
 Implementing canonical math is fundamentally specified work, but two risks remain:
 
 - **Sinkhorn convergence on near-degenerate matrices.** May require additional ε_t conditions during implementation. Acceptable; document and add tests.
-- **κ_t formula precision on f64.** The Provisional 6 formula must produce 0 within 1e-9 for canonical updates. If it doesn't, either the tolerance widens or the formula gets refined. Either way, document.
+- **κ_t formula precision on f64.** Provisional 6 is not filed as of 2026-04-28. The frozen/filed Provisional 6 formula must produce 0 within 1e-9 for canonical updates. If it doesn't, either the tolerance widens or the formula gets refined. Either way, document before implementation.
 
 ### 12.2 Schedule risk
 
@@ -545,7 +562,7 @@ Implementing canonical math is fundamentally specified work, but two risks remai
 
 ### 12.3 Patent risk
 
-- If v1.0 ships with κ_t but Provisional 6 has not yet been filed, the implementation pre-dates the filing. This is fine — Prov 6 is in draft and should be filed before or alongside v1.0. **Recommend: file Prov 6 in May 2026 alongside Week 3 of the implementation.**
+- Provisional 6 is not filed as of 2026-04-28. Do not treat κ_t, ε_t, pinned-zero, or the exact QAC formula as filed-provisional-backed until Prov 6 is filed or an attorney-approved frozen draft is designated as the implementation source. **Recommend: file Prov 6 before stories #5, #10, #11, #13, and #14 enter implementation.**
 - Public crate updates create timestamped prior art. v1.0 release post is patent evidence. Date it carefully.
 
 ### 12.4 Commercial risk
