@@ -111,11 +111,13 @@ the cheapest way to divide it into two clusters.
 The comfort zone *emerges* from the trust topology. You don't configure a threshold —
 the algorithm discovers the boundary.
 
-**Plus: trust mixing**
+**Plus: gauge normalization**
 
-A small amount of trust transfers between similar contexts. Kitchen morning trust
-warms the hallway a little. `SinkhornKnopp` projects the transfer matrix onto the
-Birkhoff polytope so no single context dominates allocation.
+The accumulated trust matrix across contexts is periodically projected onto the
+Birkhoff polytope with `SinkhornKnopp` — a doubly-stochastic gauge/presentation
+normalization so no single context's row or column dominates the presented
+state. This does not itself transfer or create trust between contexts; it
+normalizes how the already-accumulated state is presented.
 
 ---
 
@@ -123,7 +125,7 @@ Birkhoff polytope so no single context dominates allocation.
 
 ```toml
 [dependencies]
-ccf-core = "0.1"
+ccf-core = "1"
 ```
 
 ### 1. Define your sensor vocabulary
@@ -329,10 +331,12 @@ let edge_sharpness = boundary.min_cut_value();
 
 ---
 
-## Trust Mixing with SinkhornKnopp
+## Gauge Normalization with SinkhornKnopp
 
 `SinkhornKnopp` projects a matrix of trust similarities onto the Birkhoff polytope
-(doubly stochastic matrices), ensuring no single context dominates trust allocation:
+(doubly stochastic matrices) as a gauge/presentation normalization step, ensuring
+no single context's row or column dominates the presented state. It is not the
+mechanism that transfers or updates trust between contexts:
 
 ```rust
 use ccf_core::sinkhorn::SinkhornKnopp;
@@ -352,7 +356,7 @@ let result = sk.project(&mut trust_matrix);
 ## Python
 
 ```toml
-ccf-core = { version = "0.1", features = ["python-ffi"] }
+ccf-core = { version = "1", features = ["python-ffi"] }
 ```
 
 Build a Python extension with [maturin](https://github.com/PyO3/maturin). Create a
@@ -430,7 +434,7 @@ that loses power picks up exactly where it left off — one interaction to re-en
 `QuietlyBeloved` in a familiar context instead of starting from zero.
 
 ```toml
-ccf-core = { version = "0.1", features = ["serde"] }
+ccf-core = { version = "1", features = ["serde"] }
 ```
 
 ```rust
@@ -479,7 +483,7 @@ Patent pending: US Provisional Application 63/988,438 (priority date 23 Feb 2026
 | `CoherenceField<V>` | 6–7, 13 | Context-keyed accumulator map with asymmetric min-gate blending |
 | `MinCutBoundary<V>` | 9–12 | Stoer-Wagner global min-cut comfort-zone boundary |
 | `SocialPhase` | 14–18 | Four-quadrant phase classifier with Schmitt trigger hysteresis |
-| `SinkhornKnopp` | 19–23 | Birkhoff polytope projector: doubly stochastic trust mixing |
+| `SinkhornKnopp` | 19–23 | Birkhoff polytope projector: doubly stochastic gauge/presentation normalization |
 | `Personality` | 24–28 | Bounded modulators: curiosity, startle sensitivity, recovery rate |
 | Full CCF pipeline | 29–34 | Composite system: sensor → context → accumulate → classify → output |
 
