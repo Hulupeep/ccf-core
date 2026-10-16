@@ -27,6 +27,11 @@ This is the architecture behind the mBot2 reference demo: a sub-$100 programmabl
 that develops genuine context-sensitive social behaviour, entirely on-device with no cloud,
 no ML model, no scripted emotional state. [See the example →](examples/mbot2.rs)
 
+The same primitives can gate autonomous agent actions. The
+[agent trust gate example](examples/agent_trust_gate.rs) combines confidence supplied by an
+external decision system with trust earned in an exact operational context, so successful
+development reads do not silently authorize an unfamiliar production deployment.
+
 **[theshyrobot.com](https://theshyrobot.com)** — use cases, how it works, patent claim map, get-started guide.
 
 ---
